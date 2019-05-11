@@ -1,0 +1,9 @@
+[package]
+name = "tiny_renderer_course"
+version = "0.1.0"
+authors = ["Nickolai Korshunov <n.a.korshunov@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+clap = "~2.33"
+image = "0.21.1"
