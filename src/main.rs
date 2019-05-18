@@ -12,6 +12,12 @@ use std::cmp::max;
 
 mod algo;
 
+use algo::{line, triangle};
+
+mod types;
+
+use types::Vec2;
+
 fn prepare_canvas(img: &mut ImageBuffer<Rgb<u8>, Vec<u8>>) {
     // Iterate over the coordinates and pixels of the image
     for (_, _, pixel) in img.enumerate_pixels_mut() {
@@ -56,14 +62,29 @@ fn lesson1(img: &mut ImageBuffer<Rgb<u8>, Vec<u8>>) {
         for j in 0..3 {
             let v0 = dome.positions[idxs[j].0 as usize];
             let v1 = dome.positions[idxs[((j + 1) % 3)].0 as usize]; // enclose the triangle
+
             let x0 = (v0.0 + 1.) * width as f32 / 2.;
             let y0 = (v0.1 + 1.) * height as f32 / 2.;
             let x1 = (v1.0 + 1.) * width as f32 / 2.;
             let y1 = (v1.1 + 1.) * height as f32 / 2.;
+
             println!("{} -> {}:  ({}; {}) -> ({}; {})", idxs[j].0, idxs[(j + 1) % 3].0, x0, y0, x1, y1);
-            algo::line(img, (width - (x0 as u32)) as i32, (height - y0 as u32) as i32, (width - x1 as u32) as i32, (height - y1 as u32) as i32, color);
+            line(img,
+                 &Vec2::<i32> { x: (width - (x0 as u32)) as i32, y: (height - y0 as u32) as i32 },
+                 &Vec2::<i32> { x: (width - x1 as u32) as i32, y: (height - y1 as u32) as i32 },
+                 color);
         }
     }
+}
+
+fn lesson2(img: &mut ImageBuffer<Rgb<u8>, Vec<u8>>) {
+
+    let p1 = Vec2::<i32> { x:100, y:200};
+    let p2 = Vec2::<i32> { x:200, y:200};
+    let p3 = Vec2::<i32> { x:300, y:400};
+
+    let color = image::Rgb([255, 255, 255]);
+    triangle(img, &p1, &p2, &p3, color);
 }
 
 fn run_lesson(lesson: &Fn(&mut ImageBuffer<Rgb<u8>, Vec<u8>>), out: &str) {
@@ -87,7 +108,7 @@ fn main() {
 
     let lesson_to_run = match lesson {
         "lesson1" => lesson1,
-
+        "lesson2" => lesson2,
         _ => {
             println!("Invalid lesson");
             std::process::exit(1);
