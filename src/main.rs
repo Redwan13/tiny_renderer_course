@@ -66,19 +66,33 @@ fn lesson1(img: &mut ImageBuffer<Rgb<u8>, Vec<u8>>) {
     }
 }
 
-
-fn main() {
-    let matches = App::new("Tiny renderer course implementation")
-        .arg(Arg::with_name("output").index(1).help("output").required(true)).get_matches();
-
-    let out = matches.value_of("output");
-    println!("output: {}", out.unwrap());
-
+fn run_lesson(lesson: &Fn(&mut ImageBuffer<Rgb<u8>, Vec<u8>>), out: &str) {
     let mut img = image::ImageBuffer::new(800, 800);
     prepare_canvas(&mut img);
     println!("Prepared canvas");
-    lesson1(&mut img);
+    lesson(&mut img);
 
     println!("Completed calculations");
-    img.save(out.unwrap()).expect("Couldn't save image!");
+    img.save(out).expect("Couldn't save image!");
+}
+
+fn main() {
+    let matches = App::new("Tiny renderer course implementation")
+        .arg(Arg::with_name("lesson").index(1).help("course lesson to run").required(true))
+        .arg(Arg::with_name("output").index(2).help("output").required(true))
+        .get_matches();
+
+    let out = matches.value_of("output").unwrap();
+    let lesson = matches.value_of("lesson").unwrap();
+
+    let lesson_to_run = match lesson {
+        "lesson1" => lesson1,
+
+        _ => {
+            println!("Invalid lesson");
+            std::process::exit(1);
+        }
+    };
+
+    run_lesson(&lesson_to_run, out);
 }
