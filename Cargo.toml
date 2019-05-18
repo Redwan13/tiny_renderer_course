@@ -7,3 +7,4 @@ edition = "2018"
 [dependencies]
 clap = "~2.33"
 image = "0.21.1"
+obj-rs = "0.5"

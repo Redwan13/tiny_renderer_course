@@ -2,6 +2,7 @@ extern crate image;
 
 use image::{ImageBuffer, Rgb};
 use std::mem::swap;
+use image::math::utils::clamp;
 
 // draws line with Bresenham’s line algorithm
 pub fn line(img: &mut ImageBuffer<Rgb<u8>, Vec<u8>>, x0: i32, y0: i32, x1: i32, y1: i32, color: image::Rgb<u8>) {
@@ -25,6 +26,7 @@ pub fn line(img: &mut ImageBuffer<Rgb<u8>, Vec<u8>>, x0: i32, y0: i32, x1: i32, 
         swap(&mut yb, &mut ye);
     }
 
+    println!("inner: ({}; {}) -> ({}; {})", xb, x1, yb, y1);
     let dx = xe - xb;
     let dy = ye - yb;
     let derr = i32::abs(dy) * 2;
@@ -33,6 +35,9 @@ pub fn line(img: &mut ImageBuffer<Rgb<u8>, Vec<u8>>, x0: i32, y0: i32, x1: i32, 
     let mut x = xb;
     let mut y = yb;
     while x < xe {
+        //println!("x {} y {}", x, y);
+        x = clamp(x, 0, img.width() as i32 - 1);
+        y = clamp(y, 0, img.height() as i32 - 1);
         if steep {
             img.put_pixel(y as u32, x as u32, color);
         } else {
@@ -40,10 +45,11 @@ pub fn line(img: &mut ImageBuffer<Rgb<u8>, Vec<u8>>, x0: i32, y0: i32, x1: i32, 
         }
         err += derr;
         if err > dx {
-            y += if yb > y0 {-1} else {1};
+            y += if yb > y0 { -1 } else { 1 };
             err -= dx * 2;
         }
 
         x += 1;
     }
+    println!("------");
 }
