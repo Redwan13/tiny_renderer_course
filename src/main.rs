@@ -12,7 +12,7 @@ use std::cmp::max;
 
 mod algo;
 
-use algo::{line, triangle};
+use algo::*;
 
 mod types;
 
@@ -83,8 +83,11 @@ fn lesson2(img: &mut ImageBuffer<Rgb<u8>, Vec<u8>>) {
     let p2 = Vec2::<i32> { x:200, y:200};
     let p3 = Vec2::<i32> { x:300, y:400};
 
-    let color = image::Rgb([255, 255, 255]);
-    triangle(img, &p1, &p2, &p3, color);
+    let white = image::Rgb([255, 255, 255]);
+    triangle(img, &p1, &p2, &p3, white);
+
+    let red = image::Rgb([255, 0, 0]);
+    filled_triangle(img, &p1, &p2, &p3, red);
 }
 
 fn run_lesson(lesson: &Fn(&mut ImageBuffer<Rgb<u8>, Vec<u8>>), out: &str) {
